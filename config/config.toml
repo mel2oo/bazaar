@@ -1,0 +1,20 @@
+# 服务配置
+[server]
+    name    = "bazaar"
+    version = "1.0.0"
+    address = ":8080"
+
+# 日志配置
+[logger]
+
+# 样本文件存储配置
+[storage]
+    root-path = "data"
+    seek-file = "seek"
+
+# 样本信息存储数据库
+[database]
+    server      = "127.0.0.1"
+    username    = "admin"
+    password    = "123456"
+    bucket-name = "sample"
