@@ -14,7 +14,7 @@ import (
 
 type Browse struct {
 	db      db.Client
-	storage storage.Client
+	storage *storage.Client
 }
 
 func New(c *config.Config) (*Browse, error) {
@@ -30,7 +30,7 @@ func New(c *config.Config) (*Browse, error) {
 
 	return &Browse{
 		db:      db,
-		storage: *st,
+		storage: st,
 	}, nil
 }
 
