@@ -208,7 +208,9 @@ func withFormFileBody(method, url string, form httpURL.Values, files FileValues,
 
 	if len(form) > 0 {
 		for k, v := range form {
-			bodyWriter.WriteField(k, v[0])
+			for _, vv := range v {
+				bodyWriter.WriteField(k, vv)
+			}
 		}
 	}
 

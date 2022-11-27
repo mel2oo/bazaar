@@ -27,7 +27,7 @@ func New(c Config) (*Client, error) {
 	stat, err := os.Stat(c.Root)
 	if err != nil {
 		if os.IsNotExist(err) {
-			if err := os.Mkdir(c.Root, os.ModePerm); err != nil {
+			if err := os.MkdirAll(c.Root, os.ModePerm); err != nil {
 				return nil, err
 			}
 		}

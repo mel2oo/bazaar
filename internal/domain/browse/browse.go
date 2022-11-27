@@ -55,7 +55,7 @@ type Malware struct {
 	Hash crypto.Result `json:"hash,omitempty"`
 }
 
-func (b *Browse) MalwareCreate(m *Malware) error {
+func (b *Browse) MalwareCreate(m *Malware) (*Malware, error) {
 
 	if len(m.Date) == 0 {
 		m.Date = time.Now().Local().String()
@@ -69,19 +69,19 @@ func (b *Browse) MalwareCreate(m *Malware) error {
 
 	fi, err := m.File.Open()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	defer fi.Close()
 
 	data, err := ioutil.ReadAll(fi)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if len(m.Type) == 0 {
 		m.Type, err = filetype.ScanData(data)
 		if err != nil {
-			return err
+			return nil, err
 		}
 	}
 
@@ -97,8 +97,8 @@ func (b *Browse) MalwareCreate(m *Malware) error {
 	m.Hash = crypto.HashBytes(data)
 	m.Path, err = b.storage.Create(data, m.Hash.MD5, m.Type)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return b.db.Create(m.Hash.MD5, m)
+	return m, b.db.Create(m.Hash.MD5, m)
 }

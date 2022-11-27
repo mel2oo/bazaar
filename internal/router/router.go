@@ -32,13 +32,14 @@ func (h *Handler) upload(c *gin.Context) {
 		return
 	}
 
-	if err := h.app.MalwareCreate(req); err != nil {
+	res, err := h.app.MalwareCreate(req)
+	if err != nil {
 		c.JSON(http.StatusOK,
 			NewReply(ErrSampleUpload).WithErr(err))
 		return
 	}
 
-	c.JSON(http.StatusOK, NewReply(StatusOk))
+	c.JSON(http.StatusOK, NewReply(StatusOk).WithData(res))
 }
 
 // 查询样本
