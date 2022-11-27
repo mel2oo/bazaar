@@ -11,6 +11,9 @@ type Config struct {
 	Server     *Server         `mapstructure:"server"`
 	Storage    *storage.Config `mapstructure:"storage"`
 	Counchbase *db.Config      `mapstructure:"database"`
+	Yara       struct {
+		Address string `mapstructure:"address"`
+	} `mapstructure:"yara"`
 }
 
 type Server struct {

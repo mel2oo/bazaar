@@ -7,6 +7,7 @@ import (
 	"bazaar/internal/domain/filetype"
 	"bazaar/internal/domain/storage"
 	"bazaar/pkg/crypto"
+	"bazaar/pkg/yara"
 	"io/ioutil"
 	"mime/multipart"
 	"time"
@@ -15,6 +16,7 @@ import (
 type Browse struct {
 	db      db.Client
 	storage *storage.Client
+	yara    *yara.Client
 }
 
 func New(c *config.Config) (*Browse, error) {
@@ -28,9 +30,15 @@ func New(c *config.Config) (*Browse, error) {
 		return nil, err
 	}
 
+	yara, err := yara.NewClient(c.Yara.Address)
+	if err != nil {
+		return nil, err
+	}
+
 	return &Browse{
 		db:      db,
 		storage: st,
+		yara:    yara,
 	}, nil
 }
 
@@ -72,8 +80,16 @@ func (b *Browse) MalwareCreate(m *Malware) error {
 		}
 	}
 
+	if len(m.Tags) == 0 {
+		m.Tags = make([]string, 0)
+	}
+
+	tags, err := b.yara.ScanTags(data)
+	if err == nil {
+		m.Tags = append(m.Tags, tags...)
+	}
+
 	m.Hash = crypto.HashBytes(data)
-	// m.Tags = append(m.Tags, )
 	m.Path, err = b.storage.Create(data, m.Hash.MD5, m.Type)
 	if err != nil {
 		return err

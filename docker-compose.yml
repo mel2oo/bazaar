@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  couchbase:
+    image: couchbase/server:7.1.3
+    container_name: bazaar-counchbase
+    restart: always
+    ports:
+      - "8091-8097:8091-8097"
+      - "9123:9123"
+      - "11207:11207"
+      - "11210:11210"
+      - "11280:11280"
+      - "18091-18097:18091-18097"
+    volumes:
+      - /home/couchbase:/opt/couchbase/var
+
+  yara:
+    image: yara:v1.4.2
+    container_name: bazaar-yara
+    restart: always
+    ports:
+      - 6142:6142
+    volumes:
+      - /home/whales:/home/whales
+      - /etc/whales:/etc/whales
+    command: ./goyara -address 0.0.0.0:6142 -rule /etc/yara/zig.so

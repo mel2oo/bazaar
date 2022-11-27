@@ -20,4 +20,4 @@
     bucket-name = "sample"
 
 [yara]
-    rule-path   = ""
+    address   = ":6142"
