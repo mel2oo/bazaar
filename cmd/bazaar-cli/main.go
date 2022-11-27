@@ -13,10 +13,10 @@ import (
 
 func main() {
 	var path string
-	flag.StringVar(&path, "sample", "testdata/samples", "sample dir")
+	flag.StringVar(&path, "sample", "/Users/switch/Desktop/sample/download_for_cape", "sample dir")
 	flag.Parse()
 
-	uri := "http://127.0.0.1:18528/bazaar/v1/upload"
+	uri := "http://0.0.0.0:18528/bazaar/v1/upload"
 
 	filepath.Walk(path, func(path string, info fs.FileInfo, _ error) error {
 		if info.IsDir() {
@@ -38,7 +38,7 @@ func main() {
 					Reader: f,
 				},
 			},
-			httpclient.WithTTL(time.Second*30),
+			httpclient.WithTTL(time.Second*5),
 		)
 		if err != nil {
 			fmt.Println("upload file error", path, err)

@@ -15,13 +15,13 @@
     # 最多滚动备份的文件数量
     max-backups = 15
     # 日志文件存储位置
-    output = "/opt/bazaar"
+    output = "bazaar/log"
     # 是否在控制台标准输出
-    stdout = false
+    stdout = true
 
 # 样本文件存储配置
 [storage]
-    root-path = "/data/bazaar"
+    root-path = "bazaar/data"
     seek-file = "seek"
 
 # 样本信息存储数据库
