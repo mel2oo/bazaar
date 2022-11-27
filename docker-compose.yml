@@ -22,6 +22,5 @@ services:
     ports:
       - 6142:6142
     volumes:
-      - /home/whales:/home/whales
-      - /etc/whales:/etc/whales
+      - /etc/yara:/etc/yara
     command: ./goyara -address 0.0.0.0:6142 -rule /etc/yara/zig.so
