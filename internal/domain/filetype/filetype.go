@@ -2,27 +2,26 @@ package filetype
 
 import (
 	"bazaar/pkg/exiftool"
+	"bazaar/pkg/trid"
 	"os"
 	"strconv"
 	"time"
 )
 
-const (
-	DefaultType = "unkonw"
-)
+const _TypeUnkonw = "unknow"
 
 func Scan(file string) (ext string, err error) {
-	maps, err := exiftool.Scan(file)
-	if err != nil {
-		return ext, err
-	}
-
-	ext, ok := maps["FileTypeExtension"]
-	if ok {
+	ext, err = exiftool.ScanExt(file)
+	if err != nil && ExtClass(ext) != TYPE_UNDEFINE {
 		return ext, nil
 	}
 
-	return DefaultType, nil
+	ext, err = trid.ScanExt(file)
+	if err != nil || len(ext) == 0 {
+		return _TypeUnkonw, nil
+	}
+
+	return ext, nil
 }
 
 func ScanData(data []byte) (ext string, err error) {

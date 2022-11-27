@@ -29,16 +29,42 @@ func parseOutput(tridout string) []string {
 	keeps := make([]string, 0)
 
 	lines := strings.Split(tridout, "\n")
-	if utils.StringInSlice("Error: found no file(s) to analyze!", lines) {
-		return nil
+	if utils.SliceContainsString("Error: found no file(s) to analyze!", lines) {
+		return keeps
 	}
-	lines = lines[6:]
 
-	for _, line := range lines {
-		if len(strings.TrimSpace(line)) != 0 {
-			keeps = append(keeps, strings.TrimSpace(line))
+	if len(lines) > 7 {
+		lines = lines[6:]
+
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if len(line) == 0 {
+				continue
+			}
+			if strings.HasPrefix(line, "Warning:") ||
+				strings.Contains(line, "TrID is best suited to analyze binary files!") {
+				continue
+			}
+			keeps = append(keeps, line)
 		}
 	}
 
 	return keeps
+}
+
+func ScanExt(file string) (ext string, err error) {
+	res, err := Scan(file)
+	if err != nil {
+		return ext, err
+	}
+
+	for _, s := range res {
+		left := strings.Index(s, "(")
+		right := strings.Index(s, ")")
+		if left+2 < right {
+			ext = strings.ToLower(s[left+2 : right])
+			break
+		}
+	}
+	return
 }

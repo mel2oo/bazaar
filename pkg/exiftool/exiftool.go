@@ -100,3 +100,63 @@ func stringIter(s string, callback func(prev, curr, next rune)) {
 		callback(prev, curr, 0)
 	}
 }
+
+// exif extension
+const (
+	_SysFlag = "native"
+	_ScrFlag = "screen saver"
+	_ComFlag = "com"
+	_OcxFlag = ".ocx"
+	_ElfFlag = "elf"
+)
+
+type ExifInfo struct {
+	FileType         string
+	Extension        string
+	FileDescription  string
+	OriginalFileName string
+	Subsystem        string
+}
+
+func ScanExt(file string) (string, error) {
+	m, err := Scan(file)
+	if err != nil {
+		return "", err
+	}
+
+	e := ExifInfo{
+		FileType:         strings.ToLower(m["FileType"]),
+		Extension:        strings.ToLower(m["FileTypeExtension"]),
+		FileDescription:  strings.ToLower(m["FileDescription"]),
+		OriginalFileName: strings.ToLower(m["OriginalFileName"]),
+		Subsystem:        strings.ToLower(m["Subsystem"]),
+	}
+
+	if len(e.Extension) > 0 {
+		switch e.Extension {
+		case "exe":
+			if e.Subsystem == _SysFlag {
+				return "sys", nil
+			} else if strings.HasSuffix(e.OriginalFileName, _ComFlag) {
+				return "com", nil
+			} else if strings.Contains(e.FileDescription, _ScrFlag) {
+				return "scr", nil
+			}
+			return e.Extension, nil
+
+		case "dll":
+			if strings.HasSuffix(e.OriginalFileName, _OcxFlag) {
+				return "ocx", nil
+			}
+			return e.Extension, nil
+		}
+	}
+
+	if len(e.FileType) > 0 {
+		if strings.Contains(e.FileType, _ElfFlag) {
+			return "elf", nil
+		}
+	}
+
+	return e.Extension, nil
+}
