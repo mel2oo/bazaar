@@ -3,14 +3,16 @@ package config
 import (
 	"bazaar/internal/domain/db"
 	"bazaar/internal/domain/storage"
+	"bazaar/pkg/logger"
 
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Server     *Server         `mapstructure:"server"`
-	Storage    *storage.Config `mapstructure:"storage"`
-	Counchbase *db.Config      `mapstructure:"database"`
+	Server     Server         `mapstructure:"server"`
+	Logger     logger.Config  `mapstructure:"logger"`
+	Storage    storage.Config `mapstructure:"storage"`
+	Counchbase db.Config      `mapstructure:"database"`
 	Yara       struct {
 		Address string `mapstructure:"address"`
 	} `mapstructure:"yara"`

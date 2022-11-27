@@ -23,7 +23,7 @@ type Client struct {
 	mutex *sync.Mutex
 }
 
-func New(c *Config) (*Client, error) {
+func New(c Config) (*Client, error) {
 	stat, err := os.Stat(c.Root)
 	if err != nil {
 		if os.IsNotExist(err) {

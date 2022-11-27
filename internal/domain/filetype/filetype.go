@@ -12,7 +12,7 @@ const _TypeUnkonw = "unknow"
 
 func Scan(file string) (ext string, err error) {
 	ext, err = exiftool.ScanExt(file)
-	if err != nil && ExtClass(ext) != TYPE_UNDEFINE {
+	if err == nil && ExtClass(ext) != TYPE_UNDEFINE {
 		return ext, nil
 	}
 

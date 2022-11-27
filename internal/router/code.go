@@ -55,3 +55,16 @@ func (r *Reply) WithErr(err error) *Reply {
 	}
 	return r
 }
+
+func Parse(body []byte) (*Reply, error) {
+	var res Reply
+	if err := json.Unmarshal(body, &res); err != nil {
+		return nil, err
+	}
+
+	if res.Code != StatusOk {
+		return &res, fmt.Errorf("code: %d, msg: %s", res.Code, res.Msg)
+	}
+
+	return &res, nil
+}

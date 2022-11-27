@@ -11,7 +11,7 @@ import (
 
 const (
 	_StartNo = 1
-	_MaxSize = 2
+	_MaxSize = 10000
 )
 
 type Seeks struct {

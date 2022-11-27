@@ -20,7 +20,7 @@ type Client struct {
 	collection *gocb.Collection
 }
 
-func New(c *db.Config) (*Client, error) {
+func New(c db.Config) (*Client, error) {
 	options := gocb.ClusterOptions{
 		Authenticator: gocb.PasswordAuthenticator{
 			Username: c.Username,

@@ -11,6 +11,8 @@ import (
 	"io/ioutil"
 	"mime/multipart"
 	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type Browse struct {
@@ -54,6 +56,7 @@ type Malware struct {
 }
 
 func (b *Browse) MalwareCreate(m *Malware) error {
+
 	if len(m.Date) == 0 {
 		m.Date = time.Now().Local().String()
 	}
@@ -61,6 +64,8 @@ func (b *Browse) MalwareCreate(m *Malware) error {
 	if len(m.Name) == 0 {
 		m.Name = m.File.Filename
 	}
+
+	logrus.Infof("recevie upload file: %s", m.Name)
 
 	fi, err := m.File.Open()
 	if err != nil {
@@ -76,7 +81,7 @@ func (b *Browse) MalwareCreate(m *Malware) error {
 	if len(m.Type) == 0 {
 		m.Type, err = filetype.ScanData(data)
 		if err != nil {
-			return err
+			logrus.Warnf("yara tags scan error", err)
 		}
 	}
 

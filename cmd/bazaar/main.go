@@ -8,7 +8,7 @@ import (
 
 func main() {
 	var path string
-	flag.StringVar(&path, "config", "../../config/config.toml", "config file")
+	flag.StringVar(&path, "path", "config/config.toml", "config file")
 	flag.Parse()
 
 	c, err := config.Load(path)

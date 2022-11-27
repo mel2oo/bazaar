@@ -1,8 +1,8 @@
-version: "3.9"
+version: "3.5"
 
 services:
   couchbase:
-    image: couchbase/server:7.1.3
+    image: couchbase:7.1.3
     container_name: bazaar-counchbase
     restart: always
     ports:
@@ -22,5 +22,5 @@ services:
     ports:
       - 6142:6142
     volumes:
-      - /etc/yara:/etc/yara
+      - /home/switch/bazaar/testdata:/etc/yara
     command: ./goyara -address 0.0.0.0:6142 -rule /etc/yara/zig.so
