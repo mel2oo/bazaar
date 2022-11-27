@@ -13,7 +13,7 @@ import (
 
 func main() {
 	var path string
-	flag.StringVar(&path, "sample", "bin/06_bazaar", "sample dir")
+	flag.StringVar(&path, "sample", "testdata/samples", "sample dir")
 	flag.Parse()
 
 	uri := "http://127.0.0.1:18528/bazaar/v1/upload"

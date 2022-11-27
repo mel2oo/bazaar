@@ -62,6 +62,7 @@ const (
 	ZIP Extension = "zip"
 	JAR Extension = "jar"
 	XML Extension = "xml"
+	TXT Extension = "txt"
 )
 
 var extTypes = map[Extension]string{
@@ -123,6 +124,7 @@ var extTypes = map[Extension]string{
 	ZIP: TYPE_UNDEFINE,
 	JAR: TYPE_UNDEFINE,
 	XML: TYPE_UNDEFINE,
+	TXT: TYPE_UNDEFINE,
 }
 
 func ExtClass(ext Extension) string {

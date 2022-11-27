@@ -81,7 +81,7 @@ func (b *Browse) MalwareCreate(m *Malware) error {
 	if len(m.Type) == 0 {
 		m.Type, err = filetype.ScanData(data)
 		if err != nil {
-			logrus.Warnf("yara tags scan error", err)
+			return err
 		}
 	}
 
