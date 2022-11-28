@@ -8,6 +8,8 @@ import (
 	"bazaar/pkg/cmd"
 	"bazaar/pkg/utils"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -55,6 +57,7 @@ func parseOutput(tridout string) []string {
 func ScanExt(file string) (ext string, err error) {
 	res, err := Scan(file)
 	if err != nil {
+		logrus.Error("trid scan error", err)
 		return ext, err
 	}
 

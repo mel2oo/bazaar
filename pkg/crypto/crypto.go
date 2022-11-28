@@ -16,8 +16,8 @@ import (
 	"github.com/glaslos/ssdeep"
 )
 
-// Result aggregates all hashes.
-type Result struct {
+// Hash aggregates all hashes.
+type Hash struct {
 	CRC32  string `json:"crc32,omitempty"`
 	MD5    string `json:"md5,omitempty"`
 	SHA1   string `json:"sha1,omitempty"`
@@ -68,8 +68,8 @@ func GetSSDeep(b []byte) string {
 }
 
 // HashBytes run all crypto modules and return results.
-func HashBytes(data []byte) Result {
-	return Result{
+func HashBytes(data []byte) Hash {
+	return Hash{
 		CRC32:  GetCRC32(data),
 		MD5:    GetMD5(data),
 		SHA1:   GetSHA1(data),

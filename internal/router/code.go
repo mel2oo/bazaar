@@ -10,6 +10,7 @@ const StatusOk = iota
 const (
 	ErrParamVerify = 1000 + iota
 	ErrSampleUpload
+	ErrSampleQuery
 )
 
 var codeText = map[int]string{

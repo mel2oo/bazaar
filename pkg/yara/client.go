@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
@@ -64,6 +65,7 @@ func (c *Client) ScanTags(data []byte) ([]string, error) {
 
 	res, err := c.ScanBlobs(ctx, data)
 	if err != nil {
+		logrus.Error("yara scan error", err)
 		return nil, err
 	}
 

@@ -81,3 +81,16 @@ func (c *Client) Get(key string, value interface{}) error {
 	// Assigns the value of the result into the valuePtr using default decoding.
 	return res.Content(&value)
 }
+
+// Query executes a N1QL query.
+func (c *Client) Query(statement string,
+	args map[string]interface{}) (*gocb.QueryResult, error) {
+
+	results, err := c.cluster.Query(statement, &gocb.QueryOptions{
+		NamedParameters: args, Adhoc: true})
+	if err != nil {
+		return nil, err
+	}
+
+	return results, nil
+}

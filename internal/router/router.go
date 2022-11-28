@@ -44,7 +44,21 @@ func (h *Handler) upload(c *gin.Context) {
 
 // 查询样本
 func (h *Handler) query(c *gin.Context) {
+	req := new(browse.QueryMeta)
 
+	if err := c.Bind(req); err != nil {
+		c.JSON(http.StatusOK, NewReply(ErrParamVerify))
+		return
+	}
+
+	res, err := h.app.MalwareQuery(req)
+	if err != nil {
+		c.JSON(http.StatusOK,
+			NewReply(ErrSampleQuery).WithErr(err))
+		return
+	}
+
+	c.JSON(http.StatusOK, NewReply(StatusOk).WithData(res))
 }
 
 // 下载样本

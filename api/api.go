@@ -38,7 +38,7 @@ func MalwareUpload(host, file, ext string, tags []string) error {
 				Reader: f,
 			},
 		},
-		httpclient.WithTTL(time.Second*5),
+		httpclient.WithTTL(time.Second*20),
 	)
 	if err != nil {
 		return err

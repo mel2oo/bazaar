@@ -1,5 +1,7 @@
 package db
 
+import "github.com/couchbase/gocb/v2"
+
 // Config represents the database config.
 type Config struct {
 	// the data source name (DSN) for connecting to the database.
@@ -15,4 +17,5 @@ type Config struct {
 type Client interface {
 	Create(key string, value interface{}) error
 	Get(key string, value interface{}) error
+	Query(statement string, args map[string]interface{}) (*gocb.QueryResult, error)
 }

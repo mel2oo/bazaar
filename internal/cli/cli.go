@@ -36,12 +36,14 @@ func Upload(ctx *cli.Context) error {
 	dir := ctx.String("dir")
 	ext := ctx.String("ext")
 	tags := ctx.StringSlice("tag")
+	index := 1
 
 	if len(file) > 0 {
 		if err := api.MalwareUpload(host, file, ext, tags); err != nil {
-			fmt.Println("upload file error", file, err)
+			fmt.Println(index, "upload file error", file, err)
 		} else {
-			fmt.Println("upload file success", file)
+			fmt.Println(index, "upload file success", file)
+			index += 1
 		}
 	}
 
@@ -52,9 +54,10 @@ func Upload(ctx *cli.Context) error {
 			}
 
 			if err := api.MalwareUpload(host, path, ext, tags); err != nil {
-				fmt.Println("upload file error", path, err)
+				fmt.Println(index, "upload file error", path, err)
 			} else {
-				fmt.Println("upload file success", path)
+				fmt.Println(index, "upload file success", path)
+				index += 1
 			}
 
 			return nil
