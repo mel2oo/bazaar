@@ -107,22 +107,36 @@ func (b *Browse) MalwareCreate(m *Malware) (*Malware, error) {
 }
 
 type QueryMeta struct {
-	Hash string   `form:"hash"`
-	Type string   `form:"type"`
-	Tags []string `form:"tags"`
+	Hash string `form:"hash"`
+	Type string `form:"type"`
+	Tags string `form:"tags"`
+	Size int    `form:"size"`
 }
 
 func (b *Browse) MalwareQuery(q *QueryMeta) ([]interface{}, error) {
 	var statement string
 
+	if q.Size == 0 {
+		q.Size = 1000
+	}
+
 	if len(q.Hash) > 0 {
-		statement = fmt.Sprintf("SELECT data,name,type,md5,sha256,tags FROM %s WHERE md5='%s'",
-			b.c.Counchbase.BucketName, q.Hash,
+		statement = fmt.Sprintf("SELECT date,name,type,md5,sha256,tags FROM %s WHERE md5='%s' OR sha256='%s'",
+			b.c.Counchbase.BucketName, q.Hash, q.Hash,
 		)
-	} else if len(q.Type) > 0 {
-		statement = fmt.Sprintf("SELECT data,name,type,md5,sha256,tags FROM %s WHERE type='%s' limit 1000",
-			b.c.Counchbase.BucketName, q.Type,
+	} else if len(q.Type) > 0 && len(q.Tags) == 0 {
+		statement = fmt.Sprintf("SELECT date,name,type,md5,sha256,tags FROM %s WHERE type='%s' limit %d",
+			b.c.Counchbase.BucketName, q.Type, q.Size,
 		)
+	} else if len(q.Type) > 0 && len(q.Tags) > 0 {
+		statement = fmt.Sprintf("SELECT date,name,type,md5,sha256,tags FROM %s WHERE '%s' IN tags AND type='%s' limit %d",
+			b.c.Counchbase.BucketName, q.Tags, q.Type, q.Size)
+	} else if len(q.Type) == 0 && len(q.Tags) > 0 {
+		statement = fmt.Sprintf("SELECT date,name,type,md5,sha256,tags FROM %s WHERE '%s' IN tags limit %d",
+			b.c.Counchbase.BucketName, q.Tags, q.Size)
+	} else {
+		statement = fmt.Sprintf("SELECT date,name,type,md5,sha256,tags FROM %s limit %d",
+			b.c.Counchbase.BucketName, q.Size)
 	}
 
 	res, err := b.db.Query(statement, nil)
@@ -132,8 +146,9 @@ func (b *Browse) MalwareQuery(q *QueryMeta) ([]interface{}, error) {
 	defer res.Close()
 
 	result := make([]interface{}, 0)
-	meta := make(map[string]interface{})
 	for res.Next() {
+		meta := make(map[string]interface{})
+
 		if err := res.Row(&meta); err != nil {
 			return nil, err
 		}
@@ -142,4 +157,44 @@ func (b *Browse) MalwareQuery(q *QueryMeta) ([]interface{}, error) {
 	}
 
 	return result, nil
+}
+
+func (b *Browse) MalwareCount(q *QueryMeta) (map[string]interface{}, error) {
+	var statement string
+
+	if len(q.Type) > 0 && len(q.Tags) == 0 {
+		statement = fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE type='%s'",
+			b.c.Counchbase.BucketName, q.Type)
+	} else if len(q.Type) == 0 && len(q.Tags) > 0 {
+		statement = fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE '%s' IN tags",
+			b.c.Counchbase.BucketName, q.Tags)
+	} else if len(q.Type) > 0 && len(q.Tags) > 0 {
+		statement = fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE '%s' IN tags AND type='%s'",
+			b.c.Counchbase.BucketName, q.Tags, q.Type)
+	} else {
+		statement = fmt.Sprintf("SELECT COUNT(*) FROM %s", b.c.Counchbase.BucketName)
+	}
+
+	res, err := b.db.Query(statement, nil)
+	if err != nil {
+		return nil, err
+	}
+	defer res.Close()
+
+	var result map[string]interface{}
+	if err := res.One(&result); err != nil {
+		return nil, err
+	}
+
+	return result, nil
+}
+
+func (b *Browse) MalwareDownload(md5 string) (*Malware, error) {
+	var m Malware
+
+	if err := b.db.Get(md5, &m); err != nil {
+		return nil, err
+	}
+
+	return &m, nil
 }
