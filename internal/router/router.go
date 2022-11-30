@@ -64,6 +64,7 @@ func (h *Handler) query(c *gin.Context) {
 	c.JSON(http.StatusOK, NewReply(StatusOk).WithData(res))
 }
 
+// 样本数量
 func (h *Handler) count(c *gin.Context) {
 	req := new(browse.QueryMeta)
 

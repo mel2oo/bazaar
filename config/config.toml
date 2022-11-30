@@ -31,5 +31,7 @@
     password    = "123456"
     bucket-name = "malware"
 
-[yara]
-    address   = ":6141"
+[scan-kit]
+
+    [yara]
+        address   = ":6141"

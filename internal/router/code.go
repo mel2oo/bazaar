@@ -18,15 +18,15 @@ const (
 )
 
 var codeText = map[int]string{
-	StatusOk: "成功",
+	StatusOk: "success",
 
-	ErrParamVerify:    "参数验证失败",
-	ErrSampleUpload:   "上传样本失败",
-	ErrSampleQuery:    "查询样本失败",
-	ErrSampleCount:    "查询样本数量失败",
-	ErrSampleDownload: "下载样本失败",
-	ErrSampleExists:   "样本文件不存在",
-	ErrSampleReader:   "样本文件读取失败",
+	ErrParamVerify:    "parameter validation failed",
+	ErrSampleUpload:   "upload malware failed",
+	ErrSampleQuery:    "query malware failed",
+	ErrSampleCount:    "count malware failed",
+	ErrSampleDownload: "download malware failed",
+	ErrSampleExists:   "malware file does not exist",
+	ErrSampleReader:   "malware file read failed",
 }
 
 type Reply struct {
