@@ -16,7 +16,7 @@ func New() *cli.App {
 	app.Commands = []*cli.Command{
 		{
 			Name:   "upload",
-			Usage:  "恶意软件上传",
+			Usage:  "恶意软件存储",
 			Action: Upload,
 			Flags: []cli.Flag{
 				&cli.StringFlag{Name: "host", Value: "127.0.0.1:18528"},
